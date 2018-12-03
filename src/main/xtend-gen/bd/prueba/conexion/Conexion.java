@@ -16,7 +16,7 @@ public class Conexion {
     boolean _equals = Objects.equal(Conexion.cnx, null);
     if (_equals) {
       try {
-        Conexion.cnx = DriverManager.getConnection("jdbc:mysql://localhost:3306/basedetarea?serverTimezone=UTC", "root", "creoentuvoz");
+        Conexion.cnx = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb?serverTimezone=UTC", "root", "creoentuvoz");
       } catch (final Throwable _t) {
         if (_t instanceof SQLException) {
           final SQLException ex = (SQLException)_t;

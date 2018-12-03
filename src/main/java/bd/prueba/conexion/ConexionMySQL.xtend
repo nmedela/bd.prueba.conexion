@@ -13,7 +13,7 @@ public class Conexion {
 		if (cnx == null) {
 			try {
 //				Class.forName("com.mysql.jdbc.Driver");
-				cnx = DriverManager.getConnection("jdbc:mysql://localhost:3306/basedetarea?serverTimezone=UTC", "root", "creoentuvoz");
+				cnx = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb?serverTimezone=UTC", "root", "creoentuvoz");
 			} catch (SQLException ex) {
 				throw new SQLException(ex);
 			} catch (ClassNotFoundException ex) {

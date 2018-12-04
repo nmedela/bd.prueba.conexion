@@ -1,19 +1,16 @@
 package bd.prueba.conexion
 
+import bd.prueba.persona.Beneficiario
+import bd.prueba.persona.Cliente
+import bd.prueba.persona.Persona
+import bd.prueba.seguro.Beneficiarios
+import bd.prueba.seguro.SeguroVida
 import java.sql.Connection
 import java.sql.PreparedStatement
-import java.sql.SQLException
 import java.sql.ResultSet
-import java.util.List
+import java.sql.SQLException
 import java.util.ArrayList
-import bd.prueba.persona.Persona
-import java.util.Objects
-import bd.prueba.persona.Cliente
-import bd.prueba.seguro.SeguroVida
-import bd.prueba.seguro.Seguro
-import bd.prueba.seguro.Beneficiarios
-import java.util.Set
-import bd.prueba.persona.Beneficiario
+import java.util.List
 import org.omg.CORBA.UserException
 
 class Consultas {
@@ -35,7 +32,7 @@ class Consultas {
 		var String insertarSQL = "INSERT INTO mydb." + tabla + "(" + nombresCol + ") VALUES (" + valoresCol + ")";
 
 		try {
-			val PreparedStatement pstmt = this.conn.prepareStatement(insertarSQL);
+			val PreparedStatement pstmt = conn.prepareStatement(insertarSQL);
 			pstmt.executeUpdate()
 
 		} catch (SQLException e) {
@@ -46,7 +43,7 @@ class Consultas {
 	def void select() {
 		try {
 
-			val PreparedStatement pstmt = this.conn.prepareStatement(this.selectSQL);
+			val PreparedStatement pstmt = conn.prepareStatement(this.selectSQL);
 			val ResultSet resultado = pstmt.executeQuery()
 			val List<Persona> usuarios = new ArrayList()
 			while (resultado.next()) {
@@ -70,14 +67,14 @@ class Consultas {
 		val ResultSet resultado = ps.executeQuery()
 		resultado.next()
 		val Integer idPersona = resultado.getInt("id_persona")
-		if (idPersona == null) {
+		if (idPersona === null) {
 			throw new Exception("No Existe el cliente buscado")
 		}
 		val cliente = new Cliente(resultado.getInt("id_persona"), resultado.getString("nombre"),
 			resultado.getString("direccion"), resultado.getInt("telefono"), resultado.getInt("dni"),
 			resultado.getString("tipo"), resultado.getDate("fecha_nacimiento"))
 		val Integer idSeguro = resultado.getInt("id_seguro")
-		if (idSeguro != null) {
+		if (idSeguro !== null) {
 
 			var SeguroVida seguroVida = new SeguroVida => [
 				id_seguro = resultado.getInt("id_seguro")

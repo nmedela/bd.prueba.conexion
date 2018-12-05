@@ -17,19 +17,19 @@ class SeguroController {
 			val cliente = Consultas.buscarClienteParaCrearSeguroDeVida(dniValue)
 			ok(cliente.toJson)
 		} catch (Exception e) {
-			return badRequest("No se encontró la busqueda. " + e.message)
+			return badRequest("No se encontrï¿½ la busqueda. " + e.message)
 		}
 
 	}
 	
 		@Get("/beneficiariosDeClienteParaSeguroDeVida/:id")
 	def Result getbeneficiariosDeVidaDeCliente() {
-		val dniValue = Integer.valueOf(id)
+		val idValue = Integer.valueOf(id)
 		try {
-			val beneficiarios = Consultas.beneficiariosDeCliente(dniValue)
+			val beneficiarios = Consultas.beneficiariosDeCliente(idValue)
 			ok(beneficiarios.toJson)
 		} catch (Exception e) {
-			return badRequest("No se encontró la busqueda. " + e.message)
+			return badRequest("No se encontrï¿½ la busqueda. " + e.message)
 		}
 
 	}

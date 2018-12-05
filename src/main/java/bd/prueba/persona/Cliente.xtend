@@ -8,15 +8,25 @@ import java.sql.Date
 import org.eclipse.xtend.lib.annotations.Accessors
 import java.util.List
 import java.util.ArrayList
+import java.sql.ResultSet
 
 @Accessors
-class Cliente extends Persona {
+class Cliente {
+	Persona persona
 	Date fecha_de_nacimiento
-	SeguroVida seguroVida
-	List<Beneficiario> beneficiarios = new  ArrayList
+	int id_seguro_vinculado
+	List<Beneficiario> beneficiarios = new ArrayList
 
-	new(int _id, String _nombre, String _direccion, int _tel, int _dni, String _tipo, Date _fecha) {
-		super(_id, _nombre, _direccion, _tel, _dni, _tipo)
-		this.fecha_de_nacimiento = _fecha
+	new() {
 	}
+
+	def static fromSQL(ResultSet resultado) {
+
+		return new Cliente => [
+			persona = Persona.fromSQL(resultado)
+			fecha_de_nacimiento = resultado.getDate("fecha_de_nacimiento")
+			id_seguro_vinculado = resultado.getInt("id_seguro_vinculado")
+		]
+	}
+
 }

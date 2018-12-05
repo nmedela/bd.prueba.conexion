@@ -70,46 +70,20 @@ class Consultas {
 		if (idPersona === null) {
 			throw new Exception("No Existe el cliente buscado")
 		}
-		val cliente = new Cliente(resultado.getInt("id_persona"), resultado.getString("nombre"),
-			resultado.getString("direccion"), resultado.getInt("telefono"), resultado.getInt("dni"),
-			resultado.getString("tipo"), resultado.getDate("fecha_nacimiento"))
-		val Integer idSeguro = resultado.getInt("id_seguro")
-		if (idSeguro !== null) {
-
-			var SeguroVida seguroVida = new SeguroVida => [
-				id_seguro = resultado.getInt("id_seguro")
-				fecha_inicio = resultado.getDate("fecha_inicio")
-				fecha_vencimiento = resultado.getDate("fecha_vencimiento")
-				prima = resultado.getDouble("prima")
-				tipo = 'v'
-				estado = resultado.getString("estado")
-				cobertura = resultado.getString("cobertura")
-				ocupacion = resultado.getString("ocupacion")
-			]
-			System.out.println(cliente.nombre)
-
-			seguroVida.beneficiarios = beneficiariosDeSeguro(idSeguro).toSet
-//				System.out.println(beneficiariosDeSeguro(idSeguro))
-			cliente.seguroVida = seguroVida
-		}
-		return cliente
+		return Cliente.fromSQL(resultado)
+		
 	}
 
-	static def List<Beneficiarios> beneficiariosDeSeguro(int seguro) {
+	static def List<Persona> beneficiariosDeSeguro(int seguro) {
 		System.out.println("entro aca")
 
 		ps = conn.prepareStatement("call mydb.beneficiariosDeSeguro(?)");
 		ps.setInt(1, seguro)
-		val List<Beneficiarios> beneficiarios = new ArrayList
+		val List<Persona> beneficiarios = new ArrayList
 		val ResultSet resultado = ps.executeQuery()
 		while (resultado.next()) {
 			try {
-				beneficiarios.add(
-					new Beneficiarios(resultado.getInt("id_beneficiario"), resultado.getString("nombre"), "", 0, 0, 'b',
-						resultado.getString("lazo_o_vinculo"), resultado.getInt("id_vinculo"), seguro,
-						resultado.getDouble("porcentaje_asignado"))
-				)
-
+				beneficiarios.add( Persona.fromSQL(resultado))
 			} catch (UserException e) {
 				System.out.println(e.message)
 			}
@@ -118,26 +92,23 @@ class Consultas {
 		beneficiarios
 	}
 
-	static def List<Beneficiario> beneficiariosDeCliente(int idCliente) {
+	static def List<Persona> beneficiariosDeCliente(int idCliente) {
 		System.out.println("entro aca")
 
 		ps = conn.prepareStatement("call mydb.buscarBeneficiariosDeCliente(?)");
 		ps.setInt(1, idCliente)
-		val List<Beneficiario> beneficiarios = new ArrayList
+		val List<Persona> beneficiarios = new ArrayList
 		val ResultSet resultado = ps.executeQuery()
 		while (resultado.next()) {
 			try {
-				beneficiarios.add(
-					new Beneficiario(resultado.getInt("id_beneficiario"), resultado.getString("nombre"), "", 0, 0, 'b',
-						resultado.getString("lazo_o_vinculo"), idCliente)
-				)
+				beneficiarios.add(Persona.fromSQL(resultado))
 
 			} catch (UserException e) {
 				System.out.println(e.message)
 			}
 		}
 
-		beneficiarios
+		return beneficiarios
 	}
 
 }
